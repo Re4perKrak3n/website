@@ -55,7 +55,7 @@
       left: 50%;
       width: 60px;
       height: 60px;
-      background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255,0) 70%);
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 70%);
       transform: translateX(-50%);
       z-index: 2;
       animation: glowPulse 4s infinite ease-in-out;
@@ -192,6 +192,8 @@
       text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
       cursor: pointer;
       transition: background 0.3s;
+      text-decoration: none;
+      display: inline-block;
     }
 
     .voice-demo-btn:hover {
@@ -232,26 +234,86 @@
     section#highlight-features {
       padding: 60px 40px;
       text-align: center;
-      background: url('vis/eye.png') no-repeat center;
-      background-size: cover;
+      background: rgba(0, 0, 0, 0.5);
       border-radius: 10px;
-      position: relative;
     }
 
-    section#highlight-features::before {
+    section#team {
+      padding: 60px 40px;
+      background: url('https://images.unsplash.com/photo-1633614508638-15e82a97a9e8?auto=format&fit=crop&w=1920&q=80') no-repeat center;
+      background-size: cover;
+      position: relative;
+      border-radius: 10px;
+    }
+
+    section#team::before {
       content: '';
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.5);
+      background: rgba(0, 0, 0, 0.6);
       z-index: 1;
+      border-radius: 10px;
     }
 
-    section#highlight-features .features.highlight {
+    section#team > * {
       position: relative;
       z-index: 2;
+    }
+
+    .team-list {
+      max-width: 800px;
+      margin: 40px auto 0;
+    }
+
+    .team-role {
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(0, 255, 255, 0.2);
+      border-radius: 8px;
+      margin-bottom: 15px;
+      padding: 15px 20px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .team-role:hover {
+      border-color: #00ffff;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+      transform: translateY(-3px);
+    }
+
+    .team-role h5 {
+      font-size: 1.4rem;
+      text-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+      margin-bottom: 10px;
+    }
+
+    .team-role .names {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .team-role:hover .names {
+      max-height: 100px;
+    }
+
+    .team-role .names p {
+      font-size: 1rem;
+      margin: 5px 0;
+    }
+
+    .team-role a {
+      color: #00ffff;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .team-role a:hover {
+      color: #fff;
+      text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
     }
 
     .features.core {
@@ -306,7 +368,8 @@
     .feature-card .eyes {
       width: 100%;
       height: 100%;
-      background: transparent;
+      background: url('vis/eye.png') no-repeat center;
+      background-size: cover;
       transition: opacity 0.5s ease-in-out;
       animation: eyeGlitter 3s infinite ease-in-out;
     }
@@ -332,7 +395,7 @@
       flex-direction: column;
       justify-content: center;
       opacity: 0;
-      transition: opacity 0.5s ease-in-out;
+      transition: opacity 0.3s ease-in-out;
     }
 
     .feature-card.active .content {
@@ -371,6 +434,12 @@
     footer a {
       color: #00ffff;
       text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    footer a:hover {
+      color: #fff;
+      text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
     }
 
     @keyframes fadeIn {
@@ -394,6 +463,7 @@
         <li><a href="#home">Home</a></li>
         <li><a href="#features">Features</a></li>
         <li><a href="#about">About</a></li>
+        <li><a href="#team">Team</a></li>
       </ul>
     </nav>
   </header>
@@ -404,7 +474,7 @@
       <h1>JARVIS</h1>
       <h2>AI ASSISTANT</h2>
       <p>Welcome to the future of intelligence. JARVIS is your advanced AI companion, designed to assist, learn, and evolve with you.</p>
-      <button class="voice-demo-btn" onclick="playVoiceDemo()">Try Demo</button>
+      <a href="https://apple.xyz" class="voice-demo-btn">Try Demo</a>
     </section>
 
     <section id="highlight-features">
@@ -412,21 +482,18 @@
       <p>Explore some of JARVIS's standout capabilities designed to enhance your experience.</p>
       <div class="features highlight">
         <div class="feature-card" onclick="toggleContent(this)">
-          <div class="eyes"></div>
           <div class="content">
             <h5>Smart Assistant</h5>
             <p>Provides intelligent responses and assistance for daily tasks.</p>
           </div>
         </div>
         <div class="feature-card" onclick="toggleContent(this)">
-          <div class="eyes"></div>
           <div class="content">
             <h5>Task Automation</h5>
             <p>Automates repetitive tasks to save you time and effort.</p>
           </div>
         </div>
         <div class="feature-card" onclick="toggleContent(this)">
-          <div class="eyes"></div>
           <div class="content">
             <h5>Custom AI</h5>
             <p>Adapts to your preferences for a personalized experience.</p>
@@ -445,7 +512,7 @@
           <div class="eyes"></div>
           <div class="content">
             <h5>Chatbot</h5>
- ${({p>Engages in conversational dialogue with the user.</p>
+            <p>Engages in conversational dialogue with the user.</p>
           </div>
         </div>
         <div class="feature-card" onclick="toggleContent(this)">
@@ -620,10 +687,47 @@
       <h3>About JARVIS</h3>
       <p>Inspired by cutting-edge technology, JARVIS is an AI built to assist humans in exploring the universe, solving problems, and pushing the boundaries of innovation.</p>
     </section>
+
+    <section id="team">
+      <h3>Our Team</h3>
+      <p>Meet the brilliant minds behind JARVIS AI, driving innovation and excellence.</p>
+      <div class="team-list">
+        <div class="team-role">
+          <h5>Requirement Gatherers</h5>
+          <div class="names">
+            <p><a href="https://apple.xyz">Varun Selvakumar</a>, <a href="https://apple.xyz">Mohammed Fahad Hameed</a></p>
+          </div>
+        </div>
+        <div class="team-role">
+          <h5>Design Thinkers</h5>
+          <div class="names">
+            <p><a href="https://apple.xyz">Sujith B</a>, <a href="https://apple.xyz">Varun Selvakumar</a></p>
+          </div>
+        </div>
+        <div class="team-role">
+          <h5>Coders</h5>
+          <div class="names">
+            <p><a href="https://apple.xyz">Sujith B</a></p>
+          </div>
+        </div>
+        <div class="team-role">
+          <h5>Frontend Developers</h5>
+          <div class="names">
+            <p><a href="https://apple.xyz">Mohammed Nabeel</a>, <a href="https://apple.xyz">Mohammed Fahad Hameed</a></p>
+          </div>
+        </div>
+        <div class="team-role">
+          <h5>Database Developers</h5>
+          <div class="names">
+            <p><a href="https://apple.xyz">Mohammed Nabeel</a>, <a href="https://apple.xyz">Mohammed Fahad Hameed</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
 
   <footer>
-    <p>© 2025 JARVIS AI. All rights reserved. | <a href="mailto:contact@jarvis.ai">Contact Us</a></p>
+    <p>© 2025 JARVIS AI. All rights reserved. | <a href="https://apple.xyz">Contact Us</a></p>
   </footer>
 
   <script>
@@ -695,11 +799,6 @@
         ellipse(this.x, this.y, this.size);
         drawingContext.shadowBlur = 0;
       }
-    }
-
-    function playVoiceDemo() {
-      let audio = new Audio('https://apple.zyz');
-      audio.play().catch(() => alert('Error playing demo audio.'));
     }
 
     function toggleContent(card) {
