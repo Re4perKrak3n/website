@@ -222,19 +222,27 @@
       text-shadow: 0 0 5px rgba(0, 255, 255, 0.2);
     }
 
-    .features {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-      margin-top: 40px;
-      position: relative;
-    }
-
-    section#features .features:first-of-type {
+    section#features {
       background: url('https://i.pinimg.com/originals/0f/5e/5b/0f5e5b6a0a7b4b5a7c6a5b7d8e9f0a1.jpg') no-repeat center;
       background-size: cover;
-      padding: 20px;
+      padding: 60px 40px;
       border-radius: 10px;
+    }
+
+    .features.core {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(3, auto);
+      gap: 20px;
+      margin-top: 40px;
+    }
+
+    .features.automation {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(5, auto);
+      gap: 20px;
+      margin-top: 40px;
     }
 
     .feature-card {
@@ -293,10 +301,10 @@
       flex-direction: column;
       justify-content: center;
       opacity: 0;
-      transition: 0.5s ease-in-out;
+      transition: opacity 0.5s ease-in-out;
     }
 
-    .feature-card:hover .content {
+    .feature-card.active .content {
       opacity: 1;
     }
 
@@ -304,6 +312,11 @@
       font-size: 1.3rem;
       margin-bottom: 10px;
       text-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      opacity: 1;
+      z-index: 1;
     }
 
     .feature-card p {
@@ -368,64 +381,64 @@
       <p>The JARVIS AI Assistant is designed to perform a wide variety of tasks aimed at improving user convenience and daily automation.</p>
 
       <h4>Core Functionalities</h4>
-      <div class="features">
-        <div class="feature-card">
+      <div class="features core">
+        <div class="feature-card" onclick="toggleContent(this)">
           <div class="eyes"></div>
           <div class="content">
             <h5>Chatbot</h5>
             <p>Engages in conversational dialogue with the user.</p>
           </div>
         </div>
-        <div class="feature-card">
+        <div class="feature-card" onclick="toggleContent(this)">
           <div class="eyes"></div>
           <div class="content">
             <h5>Real-Time Search Engine</h5>
             <p>Searches the internet and fetches information instantly.</p>
           </div>
         </div>
-        <div class="feature-card">
+        <div class="feature-card" onclick="toggleContent(this)">
           <div class="eyes"></div>
           <div class="content">
             <h5>Vertical Mouse</h5>
             <p>Allows control of mouse pointer in a unique vertical layout for ease of access.</p>
           </div>
         </div>
-        <div class="feature-card">
+        <div class="feature-card" onclick="toggleContent(this)">
           <div class="eyes"></div>
           <div class="content">
             <h5>Image Generation</h5>
             <p>Generates AI-based images based on user input or prompts.</p>
           </div>
         </div>
-        <div class="feature-card">
+        <div class="feature-card" onclick="toggleContent(this)">
           <div class="eyes"></div>
           <div class="content">
             <h5>Active Brain (Model)</h5>
             <p>A central intelligent system that learns and adapts based on user interaction.</p>
           </div>
         </div>
-        <div class="feature-card">
+        <div class="feature-card" onclick="toggleContent(this)">
           <div class="eyes"></div>
           <div class="content">
             <h5>OCR (Optical Character Recognition)</h5>
             <p>Reads and extracts text from images.</p>
           </div>
         </div>
-        <div class="feature-card">
+        <div class="feature-card" onclick="toggleContent(this)">
           <div class="eyes"></div>
           <div class="content">
             <h5>Presentation Generator</h5>
             <p>Creates automated presentations using AI.</p>
           </div>
         </div>
-        <div class="feature-card">
+        <div class="feature-card" onclick="toggleContent(this)">
           <div class="eyes"></div>
           <div class="content">
             <h5>RKoll (Fun Mode)</h5>
             <p>Playfully teases the user or shows funny videos based on voice commands or random triggers.</p>
           </div>
         </div>
-        <div class="feature-card">
+        <div class="feature-card" onclick="toggleContent(this)">
           <div class="eyes"></div>
           <div class="content">
             <h5>Voice Recognition</h5>
@@ -435,106 +448,106 @@
       </div>
 
       <h4>Automation Model Capabilities</h4>
-      <div class="features">
-        <div class="feature-card">
+      <div class="features automation">
+        <div class="feature-card" onclick="toggleContent(this)">
           <div class="eyes"></div>
           <div class="content">
             <h5>Chrome Automation</h5>
             <p>Opens/closes browser tabs, opens specific websites or tabs using commands, and provides complete Chrome automation.</p>
           </div>
         </div>
-        <div class="feature-card">
+        <div class="feature-card" onclick="toggleContent(this)">
           <div class="eyes"></div>
           <div class="content">
             <h5>Graph Plotting</h5>
             <p>Automatically generates graphs based on provided datasets.</p>
           </div>
         </div>
-        <div class="feature-card">
+        <div class="feature-card" onclick="toggleContent(this)">
           <div class="eyes"></div>
           <div class="content">
             <h5>YouTube Automation</h5>
             <p>Controls YouTube functions like play, pause, search, and browse content.</p>
           </div>
         </div>
-        <div class="feature-card">
+        <div class="feature-card" onclick="toggleContent(this)">
           <div class="eyes"></div>
           <div class="content">
             <h5>File Generation</h5>
             <p>Creates files in multiple formats including Word, Excel, PowerPoint, and PDF.</p>
           </div>
         </div>
-        <div class="feature-card">
+        <div class="feature-card" onclick="toggleContent(this)">
           <div class="eyes"></div>
           <div class="content">
             <h5>Code Generation</h5>
             <p>Produces programming code based on user instructions.</p>
           </div>
         </div>
-        <div class="feature-card">
+        <div class="feature-card" onclick="toggleContent(this)">
           <div class="eyes"></div>
           <div class="content">
             <h5>Document Writing</h5>
             <p>Generates emails, letters, and exports to Notepad or other editors.</p>
           </div>
         </div>
-        <div class="feature-card">
+        <div class="feature-card" onclick="toggleContent(this)">
           <div class="eyes"></div>
           <div class="content">
             <h5>Application Control</h5>
             <p>Opens and closes any installed application via voice or text commands.</p>
           </div>
         </div>
-        <div class="feature-card">
+        <div class="feature-card" onclick="toggleContent(this)">
           <div class="eyes"></div>
           <div class="content">
             <h5>System Automation</h5>
             <p>Executes OS-level commands for automation and control.</p>
           </div>
         </div>
-        <div class="feature-card">
+        <div class="feature-card" onclick="toggleContent(this)">
           <div class="eyes"></div>
           <div class="content">
             <h5>System Information</h5>
             <p>Displays system-related details such as CPU usage, memory status, etc.</p>
           </div>
         </div>
-        <div class="feature-card">
+        <div class="feature-card" onclick="toggleContent(this)">
           <div class="eyes"></div>
           <div class="content">
             <h5>Live Weather Updates</h5>
             <p>Provides current weather reports.</p>
           </div>
         </div>
-        <div class="feature-card">
+        <div class="feature-card" onclick="toggleContent(this)">
           <div class="eyes"></div>
           <div class="content">
             <h5>Latest News</h5>
             <p>Fetches real-time news headlines.</p>
           </div>
         </div>
-        <div class="feature-card">
+        <div class="feature-card" onclick="toggleContent(this)">
           <div class="eyes"></div>
           <div class="content">
             <h5>Random Advice Generator</h5>
             <p>Gives meaningful advice selected using an intelligent algorithm.</p>
           </div>
         </div>
-        <div class="feature-card">
+        <div class="feature-card" onclick="toggleContent(this)">
           <div class="eyes"></div>
           <div class="content">
             <h5>Random Joke Generator</h5>
             <p>Lightens the mood with a humorous joke.</p>
           </div>
         </div>
-        <div class="feature-card">
+        <div class="feature-card" onclick="toggleContent(this)">
           <div class="eyes"></div>
           <div class="content">
             <h5>Battery Health Monitor</h5>
             <p>Displays current battery percentage and health status.</p>
           </div>
         </div>
-        <div class="feature-card">
+        <div class="feature-card" onclick="toggleContent(this)">
           <div class="eyes"></div>
           <div class="content">
             <h5>Sensor Integration</h5>
@@ -628,6 +641,10 @@
     function playVoiceDemo() {
       let audio = new Audio('https://apple.zyz');
       audio.play().catch(() => alert('Error playing demo audio.'));
+    }
+
+    function toggleContent(card) {
+      card.classList.toggle('active');
     }
   </script>
 </body>
