@@ -229,6 +229,13 @@
       border-radius: 10px;
     }
 
+    section#highlight-features {
+      padding: 60px 40px;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 10px;
+    }
+
     .features.core {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -241,6 +248,13 @@
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       grid-template-rows: repeat(5, auto);
+      gap: 20px;
+      margin-top: 40px;
+    }
+
+    .features.highlight {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
       gap: 20px;
       margin-top: 40px;
     }
@@ -275,7 +289,7 @@
       width: 100%;
       height: 100%;
       background: url('vis/eye.png') no-repeat center;
-      background-size: 100%;
+      background-size: cover;
       transition: opacity 0.5s ease-in-out;
       animation: eyeGlitter 3s infinite ease-in-out;
     }
@@ -374,6 +388,34 @@
       <h2>AI ASSISTANT</h2>
       <p>Welcome to the future of intelligence. JARVIS is your advanced AI companion, designed to assist, learn, and evolve with you.</p>
       <button class="voice-demo-btn" onclick="playVoiceDemo()">Try Demo</button>
+    </section>
+
+    <section id="highlight-features">
+      <h3>Highlighted Features</h3>
+      <p>Explore some of JARVIS's standout capabilities designed to enhance your experience.</p>
+      <div class="features highlight">
+        <div class="feature-card" onclick="toggleContent(this)">
+          <div class="eyes"></div>
+          <div class="content">
+            <h5>Smart Assistant</h5>
+            <p>Provides intelligent responses and assistance for daily tasks.</p>
+          </div>
+        </div>
+        <div class="feature-card" onclick="toggleContent(this)">
+          <div class="eyes"></div>
+          <div class="content">
+            <h5>Task Automation</h5>
+            <p>Automates repetitive tasks to save you time and effort.</p>
+          </div>
+        </div>
+        <div class="feature-card" onclick="toggleContent(this)">
+          <div class="eyes"></div>
+          <div class="content">
+            <h5>Custom AI</h5>
+            <p>Adapts to your preferences for a personalized experience.</p>
+          </div>
+        </div>
+      </div>
     </section>
 
     <section id="features">
@@ -536,7 +578,7 @@
         <div class="feature-card" onclick="toggleContent(this)">
           <div class="eyes"></div>
           <div class="content">
-            <h5>Random Joke Generator</h5>
+            <h5>Random Joke Generator</ bristles>
             <p>Lightens the mood with a humorous joke.</p>
           </div>
         </div>
