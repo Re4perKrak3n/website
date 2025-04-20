@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JARVIS AI</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Exo 2', sans-serif;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: #000;
+    }
+
+    #canvas-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+
+    .horizon {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background: url('https://images.unsplash.com/photo-1464802686167-b939a6910659?auto=format&fit=crop&w=1920&q=80') no-repeat center;
+      background-size: cover;
+      filter: brightness(0.5) contrast(1.2);
+      z-index: 0;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background: radial-gradient(circle, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.8) 100%);
+      z-index: 1;
+    }
+
+    .glow {
+      position: absolute;
+      top: 15%;
+      left: 50%;
+      width: 60px;
+      height: 60px;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 70%);
+      transform: translateX(-50%);
+      z-index: 2;
+      animation: glowPulse 4s infinite ease-in-out;
+    }
+
+    @keyframes glowPulse {
+      0% { transform: translateX(-50%) scale(1); opacity: 0.7; }
+      50% { transform: translateX(-50%) scale(1.3); opacity: 1; }
+      100% { transform: translateX(-50%) scale(1); opacity: 0.7; }
+    }
+
+    .hud-elements {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .hud-line {
+      position: absolute;
+      background: rgba(0, 255, 255, 0.2);
+      animation: hudScan 5s infinite ease-in-out;
+    }
+
+    .hud-line.horizontal {
+      width: 100%;
+      height: 1px;
+      top: 30%;
+    }
+
+    .hud-line.vertical {
+      width: 1px;
+      height: 100%;
+      left: 50%;
+    }
+
+    @keyframes hudScan {
+      0% { opacity: 0.2; transform: translateY(0); }
+      50% { opacity: 0.5; transform: translateY(10px); }
+      100% { opacity: 0.2; transform: translateY(0); }
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 5;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    header .logo {
+      font-size: 1.5rem;
+      color: #fff;
+      text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    }
+
+    header nav ul {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+    }
+
+    header nav ul li a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 1.1rem;
+      text-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+      transition: color 0.3s;
+    }
+
+    header nav ul li a:hover {
+      color: #00ffff;
+    }
+
+    .container {
+      position: relative;
+      z-index: 3;
+      color: #fff;
+      text-align: center;
+      padding: 20vh 40px 40px;
+    }
+
+    .hero {
+      min-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    h1 {
+      font-size: 6rem;
+      text-transform: uppercase;
+      letter-spacing: 12px;
+      text-shadow: 0 0 30px rgba(0, 255, 255, 0.5), 0 0 10px rgba(0, 255, 255, 0.3);
+      animation: fadeIn 2s ease-in-out forwards;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      letter-spacing: 6px;
+      text-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+      opacity: 0;
+      animation: fadeIn 3s ease-in-out forwards;
+      animation-delay: 0.5s;
+    }
+
+    .hero p {
+      margin-top: 25px;
+      font-size: 1.3rem;
+      max-width: 650px;
+      text-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+      opacity: 0;
+      animation: fadeIn 4s ease-in-out forwards;
+      animation-delay: 1s;
+    }
+
+    .voice-demo-btn {
+      margin-top: 30px;
+      padding: 10px 20px;
+      background: rgba(0, 255, 255, 0.1);
+      border: 2px solid #00ffff;
+      border-radius: 5px;
+      color: #fff;
+      font-size: 1.2rem;
+      text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .voice-demo-btn:hover {
+      background: rgba(0, 255, 255, 0.3);
+    }
+
+    section {
+      padding: 60px 40px;
+      text-align: center;
+    }
+
+    section h3 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      text-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+    }
+
+    section h4 {
+      font-size: 1.8rem;
+      margin: 20px 0;
+      text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+    }
+
+    section p {
+      font-size: 1.2rem;
+      max-width: 800px;
+      margin: 0 auto;
+      text-shadow: 0 0 5px rgba(0, 255, 255, 0.2);
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 40px;
+    }
+
+    .feature-card {
+      width: 100%;
+      aspect-ratio: 1 / 0.7;
+      border-radius: 8px;
+      position: relative;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.05);
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.1);
+      overflow: hidden;
+    }
+
+    .feature-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 2px solid #00ffff;
+      border-radius: inherit;
+      opacity: 0;
+      transition: 0.4s ease-in-out;
+    }
+
+    .feature-card:hover::after {
+      opacity: 1;
+      inset: 20px;
+    }
+
+    .feature-card .eyes {
+      width: 100%;
+      height: 100%;
+      background: url('https://i.ibb.co/5vQJqN5/iron-man-eyes-new.png') no-repeat center;
+      background-size: 60%;
+      transition: 0.5s ease-in-out;
+    }
+
+    .feature-card:hover .eyes {
+      filter: brightness(0.5);
+    }
+
+    .feature-card .content {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      opacity: 0;
+      transition: 0.5s ease-in-out;
+    }
+
+    .feature-card:hover .content {
+      opacity: 1;
+    }
+
+    .feature-card h5 {
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+      text-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+    }
+
+    .feature-card p {
+      font-size: 1rem;
+      margin: 0;
+    }
+
+    footer {
+      background: rgba(0, 0, 0, 0.7);
+      padding: 20px;
+      text-align: center;
+      color: #fff;
+      z-index: 3;
+      position: relative;
+    }
+
+    footer p童0n: 5px rgba(0, 255, 255, 0.2);
+    }
+
+    footer a {
+      color: #00ffff;
+      text-decoration: none;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div id="canvas-container"></div>
+  <div class="horizon"></div>
+  <div class="overlay"></div>
+  <div class="hud-elements">
+    <div class="hud-line horizontal"></div>
+    <div class="hud-line vertical"></div>
+  </div>
+  <header>
+    <div class="logo">JARVIS</div>
+    <nav>
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#about">About</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="container">
+    <section id="home" class="hero">
+      <div class="glow"></div>
+      <h1>JARVIS</h1>
+      <h2>AI ASSISTANT</h2>
+      <p>Welcome to the future of intelligence. JARVIS is your advanced AI companion, designed to assist, learn, and evolve with you.</p>
+      <button class="voice-demo-btn" onclick="playVoiceDemo()">Try Voice Command</button>
+    </section>
+
+    <section id="features">
+      <h3>Features</h3>
+      <p>The JARVIS AI Assistant is designed to perform a wide variety of tasks aimed at improving user convenience and daily automation.</p>
+
+      <h4>Core Functionalities</h4>
+      <div class="features">
+        <div class="feature-card">
+          <div class="eyes"></div>
+          <div class="content">
+            <h5>Chatbot</h5>
+            <p>Engages in conversational dialogue with the user.</p>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="eyes"></div>
+          <div class="content">
+            <h5>Real-Time Search Engine</h5>
+            <p>Searches the internet and fetches information instantly.</p>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="eyes"></div>
+          <div class="content">
+            <h5>Vertical Mouse</h5>
+            <p>Allows control of mouse pointer in a unique vertical layout for ease of access.</p>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="eyes"></div>
+          <div class="content">
+            <h5>Image Generation</h5>
+            <p>Generates AI-based images based on user input or prompts.</p>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="eyes"></div>
+          <div class="content">
+            <h5>Active Brain (Model)</h5>
+            <p>A central intelligent system that learns and adapts based on user interaction.</p>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="eyes"></div>
+          <div class="content">
+            <h5>OCR (Optical Character Recognition)</h5>
+            <p>Reads and extracts text from images.</p>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="eyes"></div>
+          <div class="content">
+            <h5>Presentation Generator</h5>
+            <p>Creates automated presentations using AI.</p>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="eyes"></div>
+          <div class="content">
+            <h5>RKoll (Fun Mode)</h5>
+            <p>Playfully teases the user or shows funny videos based on voice commands or random triggers.</p>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="eyes"></div>
+          <div class="content">
+            <h5>Sensor Integration</h5>
+            <p>Clap Detection: Responds to clap sounds for triggering actions.<br>Snap Detection: Responds to finger snaps for control actions.</p>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="eyes"></div>
+          <div class="content">
+            <h5>Social Media Automation</h5>
+            <p>Automates posting, scheduling, and data retrieval from social media platforms.</p>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="eyes"></div>
+          <div class="content">
+            <h5>Speech to Text</h5>
+            <p>Converts spoken words into written text.</p>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="eyes"></div>
+          <div class="content">
+            <h5>System Analysis</h5>
+            <p>Analyzes system parameters like performance, health, and status.</p>
+          </div>
+        </div>
+      </div>
+
+      <h4>Automation Model Capabilities</h4>
+      <div class="features">
+        <div class="feature-card">
+          <div class="eyes"></div>
+          <div class="content">
+            <h5>Chrome Automation</h5>
+            <p>Opens/closes browser tabs, opens specific websites or tabs using commands, and provides complete Chrome automation.</p>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="eyes"></div>
+          <div class="content">
+            <h5>Graph Plotting</h5>
+            <p>Automatically generates graphs based on provided datasets.</p>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="eyes"></div>
+          <div class="content">
+            <h5>YouTube Automation</h5>
+            <p>Controls YouTube functions like play, pause, search, and browse content.</p>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="eyes"></div>
+          <div class="content">
+            <h5>File Generation</h5>
+            <p>Creates files in multiple formats including Word, Excel, PowerPoint, and PDF.</p>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="eyes"></div>
+          <div class="content">
+            <h5>Code Generation</h5>
+            <p>Produces programming code based on user instructions.</p>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="eyes"></div>
+          <div class="content">
+            <h5>Document Writing</h5>
+            <p>Generates emails, letters, and exports to Notepad or other editors.</p>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="eyes"></div>
+          <div class="content">
+            <h5>Application Control</h5>
+            <p>Opens and closes any installed application via voice or text commands.</p>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="eyes"></div>
+          <div class="content">
+            <h5>System Automation</h5>
+            <p>Executes OS-level commands for automation and control.</p>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="eyes"></div>
+          <div class="content">
+            <h5>System Information</h5>
+            <p>Displays system-related details such as CPU usage, memory status, etc.</p>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="eyes"></div>
+          <div class="content">
+            <h5>Live Weather Updates</h5>
+            <p>Provides current weather reports.</p>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="eyes"></div>
+          <div class="content">
+            <h5>Latest News</h5>
+            <p>Fetches real-time news headlines.</p>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="eyes"></div>
+          <div class="content">
+            <h5>Random Advice Generator</h5>
+            <p>Gives meaningful advice selected using an intelligent algorithm.</p>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="eyes"></div>
+          <div class="content">
+            <h5>Random Joke Generator</h5>
+            <p>Lightens the mood with a humorous joke.</p>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="eyes"></div>
+          <div class="content">
+            <h5>Battery Health Monitor</h5>
+            <p>Displays current battery percentage and health status.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="about">
+      <h3>About JARVIS</h3>
+      <p>Inspired by cutting-edge technology, JARVIS is an AI built to assist humans in exploring the universe, solving problems, and pushing the boundaries of innovation.</p>
+    </section>
+  </div>
+
+  <footer>
+    <p>© 2025 JARVIS AI. All rights reserved. | <a href="mailto:contact@jarvis.ai">Contact Us</a></p>
+  </footer>
+
+  <script>
+    let particles = [];
+    let mousePos = { x: 0, y: 0 };
+
+    function setup() {
+      let canvas = createCanvas(windowWidth, windowHeight);
+      canvas.parent('canvas-container');
+      for (let i = 0; i < 150; i++) {
+        particles.push(new Particle());
+      }
+      canvas.mouseMoved(updateMousePos);
+    }
+
+    function updateMousePos() {
+      mousePos.x = mouseX;
+      mousePos.y = mouseY;
+    }
+
+    function draw() {
+      clear();
+      for (let particle of particles) {
+        particle.update();
+        particle.show();
+      }
+    }
+
+    function windowResized() {
+      resizeCanvas(windowWidth, windowHeight);
+    }
+
+    class Particle {
+      constructor() {
+        this.x = random(width);
+        this.y = random(height);
+        this.size = random(1, 4);
+        this.speedX = random(-0.5, 0.5);
+        this.speedY = random(-0.5, 0.5);
+        this.alpha = random(50, 200);
+        this.glow = random(5, 15);
+      }
+
+      update() {
+        let dx = mousePos.x - this.x;
+        let dy = mousePos.y - this.y;
+        let distance = sqrt(dx * dx + dy * dy);
+        let force = 50 / (distance * distance); // Simple gravitational pull
+        if (distance < 200) {
+          this.speedX += dx * force;
+          this.speedY += dy * force;
+        }
+
+        this.x += this.speedX;
+        this.y += this.speedY;
+
+        if (this.x < 0 || this.x > width) this.speedX *= -1;
+        if (this.y < 0 || this.y > height) this.speedY *= -1;
+
+        this.alpha = 150 + 100 * sin(frameCount * 0.05 + this.x * 0.01);
+        this.glow = map(this.alpha, 50, 250, 5, 15);
+      }
+
+      show() {
+        noStroke();
+        drawingContext.shadowBlur = this.glow;
+        drawingContext.shadowColor = 'rgba(0, 255, 255, 0.5)';
+        fill(0, 255, 255, this.alpha);
+        ellipse(this.x, this.y, this.size);
+        drawingContext.shadowBlur = 0;
+      }
+    }
+
+    function playVoiceDemo() {
+      let audio = new Audio('https://www.myinstants.com/media/sounds/jarvis-weather.mp3');
+      audio.play();
+    }
+  </script>
+</body>
+</html>
