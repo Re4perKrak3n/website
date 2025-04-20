@@ -6,7 +6,7 @@
   <title>JARVIS AI</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700&family=Orbitron:wght@400;700&display=swap');
 
     * {
       margin: 0;
@@ -446,6 +446,51 @@
       from { opacity: 0; transform: translateY(30px); }
       to { opacity: 1; transform: translateY(0); }
     }
+
+    /* Quote Overlay Styles */
+    .quote-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      z-index: 10;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+
+    .quote-overlay.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    .quote-text {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.2rem;
+      color: #00FFFF;
+      text-shadow: 0 0 10px rgba(0, 255, 255, 0.8), 0 0 5px rgba(0, 183, 235, 0.5);
+      text-align: center;
+      max-width: 800px;
+      padding: 20px;
+      opacity: 0;
+      white-space: nowrap;
+      transition: opacity 0.5s ease-in-out;
+      animation: cyberGlow 1.5s infinite ease-in-out;
+    }
+
+    .quote-text.visible {
+      opacity: 1;
+    }
+
+    @keyframes cyberGlow {
+      0% { text-shadow: 0 0 10px rgba(0, 255, 255, 0.8), 0 0 5px rgba(0, 183, 235, 0.5); }
+      50% { text-shadow: 0 0 20px rgba(0, 255, 255, 1), 0 0 10px rgba(0, 183, 235, 0.7); }
+      100% { text-shadow: 0 0 10px rgba(0, 255, 255, 0.8), 0 0 5px rgba(0, 183, 235, 0.5); }
+    }
   </style>
 </head>
 <body>
@@ -474,7 +519,7 @@
       <h1>JARVIS</h1>
       <h2>AI ASSISTANT</h2>
       <p>Welcome to the future of intelligence. JARVIS is your advanced AI companion, designed to assist, learn, and evolve with you.</p>
-      <a href="https://apple.xyz" class="voice-demo-btn">Try Demo</a>
+      <button class="voice-demo-btn" onclick="showQuoteWithTyping()">Try Demo</button>
     </section>
 
     <section id="highlight-features">
@@ -701,7 +746,7 @@
         <div class="team-role">
           <h5>Design Thinkers</h5>
           <div class="names">
-            <p><a href="https://www.linkedin.com/in/sujith006/">Sujith B</a>, <a href="" ></a>Varun Selvakumar</a></p>
+            <p><a href="https://www.linkedin.com/in/sujith006/">Sujith B</a>, <a href="">Varun Selvakumar</a></p>
           </div>
         </div>
         <div class="team-role">
@@ -713,7 +758,7 @@
         <div class="team-role">
           <h5>Frontend Developers</h5>
           <div class="names">
-            <p><a href="https://www.linkedin.com/in/nabeel006/z">Mohammed Nabeel</a>, <a href="">Mohammed Fahad Hameed</a></p>
+            <p><a href="https://www.linkedin.com/in/nabeel006/">Mohammed Nabeel</a>, <a href="">Mohammed Fahad Hameed</a></p>
           </div>
         </div>
         <div class="team-role">
@@ -724,6 +769,10 @@
         </div>
       </div>
     </section>
+  </div>
+
+  <div class="quote-overlay" id="quoteOverlay">
+    <div class="quote-text" id="quoteText"></div>
   </div>
 
   <footer>
@@ -799,6 +848,40 @@
         ellipse(this.x, this.y, this.size);
         drawingContext.shadowBlur = 0;
       }
+    }
+
+    function showQuoteWithTyping() {
+      const overlay = document.getElementById('quoteOverlay');
+      const quoteText = document.getElementById('quoteText');
+      const quote = "A perfume website’s easy to clone; true innovation, though? That’s rare.";
+      
+      // Show overlay with fade-in
+      overlay.classList.add('active');
+      
+      // Typing effect
+      let i = 0;
+      quoteText.textContent = '';
+      quoteText.classList.add('visible');
+      
+      function type() {
+        if (i < quote.length) {
+          quoteText.textContent += quote.charAt(i);
+          i++;
+          setTimeout(type, 50); // Adjust typing speed (50ms per character)
+        } else {
+          // Hold quote for 2 seconds, then fade out
+          setTimeout(() => {
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+              overlay.classList.remove('active');
+              overlay.style.opacity = '1'; // Reset for next time
+              window.location.href = 'chatbot.html';
+            }, 1000); // Match fade-out duration
+          }, 2000);
+        }
+      }
+      
+      setTimeout(type, 1000); // Start typing after overlay fade-in
     }
   </script>
 </body>
