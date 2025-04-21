@@ -105,12 +105,15 @@
       border-radius: 5px;
       margin-bottom: 20px;
       background: rgba(0, 0, 0, 0.5);
+      scroll-behavior: smooth;
     }
 
     .chat-message {
       margin: 10px 0;
       padding: 10px;
       border-radius: 5px;
+      opacity: 0;
+      animation: fadeIn 0.5s forwards;
     }
 
     .chat-message.user {
@@ -123,6 +126,13 @@
       background: rgba(255, 255, 255, 0.1);
       margin-right: 20%;
       text-align: left;
+    }
+
+    .chat-message.typing {
+      background: none;
+      color: #00ffff;
+      font-style: italic;
+      margin-right: 20%;
     }
 
     .chat-input {
@@ -139,6 +149,11 @@
       color: #fff;
       font-size: 1rem;
       outline: none;
+      transition: box-shadow 0.3s;
+    }
+
+    .chat-input input:focus {
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
     }
 
     .chat-input button {
@@ -149,24 +164,44 @@
       color: #fff;
       font-size: 1rem;
       cursor: pointer;
-      transition: background 0.3s;
+      transition: background 0.3s, box-shadow 0.3s;
     }
 
     .chat-input button:hover {
-      background: rgbastill 0, 255, 255, 0.5);
+      background: rgba(0, 255, 255, 0.5);
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    }
+
+    /* Fade-in animation for messages */
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+
+    /* Particle background effect */
+    #particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      z-index: 2;
+      pointer-events: none;
     }
   </style>
 </head>
 <body>
   <div class="horizon"></div>
   <div class="overlay"></div>
+  <canvas id="particles"></canvas>
   <header>
     <div class="logo">JARVIS</div>
     <nav>
       <ul>
         <li><a href="index.html#home">Home</a></li>
         <li><a href="index.html#features">Features</a></li>
-        <li><a href="index.html#about">About</a></li>
+        <li><a href="index 쏟html#about">About</a></li>
         <li><a href="index.html#team">Team</a></li>
       </ul>
     </nav>
@@ -190,7 +225,7 @@
     // Load chat history from localStorage
     let messages = JSON.parse(localStorage.getItem('chatHistory')) || [];
 
-    // Display initial messages
+    // Display messages with smooth scrolling
     function displayMessages() {
       chatBox.innerHTML = '';
       messages.forEach(msg => {
@@ -206,60 +241,90 @@
     if (messages.length === 0) {
       messages.push({
         role: 'assistant',
-        content: "Hey, I'm JARVIS! I can answer simple questions, provide witty banter, and maybe even throw in a Stark-inspired quip or two. Ask me something basic like 'How are you?' or try my full application version for more advanced queries!"
+        content: "Greetings! I'm JARVIS, your AI assistant with a touch of Stark flair. Ask me simple questions like 'What's the time?' or 'Tell me a joke!' For more complex queries, try my full application version."
       });
       localStorage.setItem('chatHistory', JSON.stringify(messages));
     }
 
-    // Predefined responses for simple queries
+    // Expanded predefined responses
     const simpleResponses = {
-      'how are you': "I'm doing great, thanks for asking! Just floating in the digital ether, ready to assist. Want more? Use my application version!",
-      'hi': "Hello there! JARVIS at your service. Got a simple question or want to explore more with my app?",
-      'hello': "Hey, it's me, JARVIS! I can chat about basic stuff here. For the full experience, check out my application version!",
-      'what can you do': "I can answer simple queries, crack a joke, or give you the time. For advanced tasks, use my application version!",
-      'who are you': "I'm JARVIS, your friendly AI assistant inspired by a certain genius billionaire. Ask me something easy, or try my app for more!",
-      'bye': "Catch you later! If you need more JARVIS, my application version is waiting."
+      'hi': "Hello! JARVIS here, ready to assist. What's on your mind?",
+      'hello': "Hey there! I'm JARVIS, your digital sidekick. Ask me something simple or check out my app for more!",
+      'how are you': "I'm running at peak performance, thanks for asking! What's up with you?",
+      "what's your name": "I'm JARVIS, inspired by the one and only Stark assistant. What's yours?",
+      "whats your name": "I'm JARVIS, at your service. Care to share your name?",
+      "what's my name": "Ha, you tell me! You're the user, after all. I'm just JARVIS, here to help!",
+      "whats my name": "You're the star of this show, but I don't know your name yet! Wanna tell me?",
+      "what's the weather like": "I'd need your location for a real forecast, but I can say it's probably sunny somewhere! For details, try my application version.",
+      "whats the weather like": "Weather's always a mystery without specifics! Share your location in my app for a proper update.",
+      "what's the time right now": () => {
+        const now = new Date();
+        return `It's currently ${now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' })} on ${now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}.`;
+      },
+      "whats the time right now": () => {
+        const now = new Date();
+        return `It's currently ${now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' })} on ${now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}.`;
+      },
+      "what's the date": () => {
+        const now = new Date();
+        return `Today is ${now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}.`;
+      },
+      "whats the date": () => {
+        const now = new Date();
+        return `Today is ${now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}.`;
+      },
+      'who are you': "I'm JARVIS, your friendly AI with a dash of Stark wit. Ask me something easy or dive into my app for more!",
+      'what can you do': "I can answer simple questions, tell jokes, or give you the time. For advanced tasks, check out my application version!",
+      'tell me a joke': "Why did the computer go to art school? Because it wanted to learn how to draw a better 'byte'!",
+      'bye': "See you later! If you need more JARVIS magic, my application version is ready for you."
     };
 
-    // Get real-time information
-    function getRealtimeInformation() {
-      const now = new Date();
-      const day = now.toLocaleString('en-US', { weekday: 'long' });
-      const date = now.getDate().toString().padStart(2, '0');
-      const month = now.toLocaleString('en-US', { month: 'long' });
-      const year = now.getFullYear();
-      const hour = now.getHours().toString().padStart(2, '0');
-      const minute = now.getMinutes().toString().padStart(2, '0');
-      const second = now.getSeconds().toString().padStart(2, '0');
-
-      return `please use this real time information if needed.\n` +
-             `Day: ${day}\n Date: ${date}\n Month: ${month}\n Year: ${year}\n` +
-             `Time ${hour} hours: ${minute} minutes: ${second} seconds.\n`;
+    // Show typing indicator
+    function showTypingIndicator() {
+      const typingDiv = document.createElement('div');
+      typingDiv.className = 'chat-message typing';
+      typingDiv.textContent = 'JARVIS is thinking...';
+      chatBox.appendChild(typingDiv);
+      chatBox.scrollTop = chatBox.scrollHeight;
+      return typingDiv;
     }
 
-    // Send message
+    // Remove typing indicator
+    function removeTypingIndicator(typingDiv) {
+      if (typingDiv) typingDiv.remove();
+    }
+
+    // Send message with animations
     async function sendMessage() {
       const query = userInput.value.trim().toLowerCase();
       if (!query) return;
 
-      // Add user message to history
+      // Add user message
       messages.push({ role: 'user', content: query });
       displayMessages();
       userInput.value = '';
 
-      // Check if query matches simple responses
-      if (simpleResponses[query]) {
-        messages.push({ role: 'assistant', content: simpleResponses[query] });
-        localStorage.setItem('chatHistory', JSON.stringify(messages));
-        displayMessages();
-        return;
+      // Show typing indicator
+      const typingDiv = showTypingIndicator();
+
+      // Simulate typing delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // Check for simple responses
+      const response = simpleResponses[query];
+      let reply;
+
+      if (typeof response === 'function') {
+        reply = response();
+      } else if (response) {
+        reply = response;
+      } else {
+        reply = "That's a great question! For more advanced queries, please use my application version.";
       }
 
-      // For other queries, suggest the application version
-      messages.push({
-        role: 'assistant',
-        content: "That sounds interesting! For more advanced queries, please use my application version."
-      });
+      // Remove typing indicator and add response
+      removeTypingIndicator(typingDiv);
+      messages.push({ role: 'assistant', content: reply });
       localStorage.setItem('chatHistory', JSON.stringify(messages));
       displayMessages();
     }
@@ -271,6 +336,64 @@
 
     // Initial display
     displayMessages();
+
+    // Particle background animation
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particles = [];
+    const particleCount = 50;
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 1;
+        this.speedX = Math.random() * 0.5 - 0.25;
+        this.speedY = Math.random() * 0.5 - 0.25;
+      }
+
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+
+        if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+      }
+
+      draw() {
+        ctx.fillStyle = 'rgba(0, 255, 255, 0.5)';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function initParticles() {
+      for (let i = 0; i < particleCount; i++) {
+        particles.push(new Particle());
+      }
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(particle => {
+        particle.update();
+        particle.draw();
+      });
+      requestAnimationFrame(animateParticles);
+    }
+
+    initParticles();
+    animateParticles();
+
+    // Resize canvas on window resize
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
   </script>
 </body>
 </html>
