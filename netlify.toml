@@ -1,5 +1,5 @@
 [[redirects]]
   from = "/chat"
-  to = "https://chatgot.onrender.com/chat"
+  to = "https://jarvis-i4wt.onrender.com/chat"
   status = 200
   force = true
