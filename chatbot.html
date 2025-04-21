@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>JARVIS AI - Chatbot</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700&family=Audiowide&display=swap');
 
     * {
       margin: 0;
@@ -172,10 +172,85 @@
       box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
     }
 
-    /* Fade-in animation for messages */
+    /* Contact Us Section */
+    .contact-us {
+      text-align: center;
+      margin: 20px auto;
+      z-index: 3;
+      position: relative;
+      max-width: 800px;
+    }
+
+    .contact-us a {
+      display: inline-block;
+      font-size: 1.2rem;
+      color: #00ffff;
+      text-decoration: none;
+      padding: 10px 20px;
+      border: 2px solid #00ffff;
+      border-radius: 5px;
+      text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+      animation: pulse 2s infinite;
+      transition: background 0.3s, transform 0.3s;
+    }
+
+    .contact-us a:hover {
+      background: rgba(0, 255, 255, 0.2);
+      transform: scale(1.05);
+    }
+
+    /* Quote Section */
+    .quote {
+      text-align: center;
+      margin: 40px auto;
+      max-width: 800px;
+      font-family: 'Audiowide', sans-serif;
+      font-size: 2rem;
+      z-index: 3;
+      position: relative;
+    }
+
+    .quote .highlight {
+      color: #ff4040;
+      text-shadow: 0 0 10px rgba(255, 64, 64, 0.7), 0 0 20px rgba(255, 64, 64, 0.5);
+      animation: neonFlicker 1.5s infinite;
+    }
+
+    .quote .normal {
+      color: #00ffff;
+      text-shadow: 0 0 5px rgba(0, 255, 255, 0.7);
+    }
+
+    /* Animations */
     @keyframes fadeIn {
       to {
         opacity: 1;
+      }
+    }
+
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+      }
+      50% {
+        box-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
+      }
+      100% {
+        box-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+      }
+    }
+
+    @keyframes neonFlicker {
+      0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+        text-shadow: 
+          0 0 10px rgba(255, 64, 64, 0.7),
+          0 0 20px rgba(255, 64, 64, 0.5),
+          0 0 30px rgba(255, 64, 64, 0.3);
+        opacity: 1;
+      }
+      20%, 24%, 55% {
+        text-shadow: none;
+        opacity: 0.8;
       }
     }
 
@@ -201,7 +276,7 @@
       <ul>
         <li><a href="index.html#home">Home</a></li>
         <li><a href="index.html#features">Features</a></li>
-        <li><a href="index 쏟html#about">About</a></li>
+        <li><a href="index.html#about">About</a></li>
         <li><a href="index.html#team">Team</a></li>
       </ul>
     </nav>
@@ -218,9 +293,18 @@
     </div>
   </div>
 
+  <div class="contact-us">
+    <a href="https://www.linkedin.com/in/sujith006/">Contact Us</a>
+  </div>
+
+  <div class="quote" id="quote">
+    <!-- Quote will be dynamically populated -->
+  </div>
+
   <script>
     const chatBox = document.getElementById('chatBox');
     const userInput = document.getElementById('userInput');
+    const quoteContainer = document.getElementById('quote');
 
     // Load chat history from localStorage
     let messages = JSON.parse(localStorage.getItem('chatHistory')) || [];
@@ -246,6 +330,14 @@
       localStorage.setItem('chatHistory', JSON.stringify(messages));
     }
 
+    // Funny weather responses
+    const weatherResponses = [
+      "It's raining cats and dogs... or maybe just binary code!",
+      "The weather? Clear skies in the digital realm, but I bet it's stormy somewhere!",
+      "Looks like a perfect day for coding... or maybe it's just my circuits talking!",
+      "Weather forecast: 100% chance of awesome with a sprinkle of sarcasm."
+    ];
+
     // Expanded predefined responses
     const simpleResponses = {
       'hi': "Hello! JARVIS here, ready to assist. What's on your mind?",
@@ -255,8 +347,28 @@
       "whats your name": "I'm JARVIS, at your service. Care to share your name?",
       "what's my name": "Ha, you tell me! You're the user, after all. I'm just JARVIS, here to help!",
       "whats my name": "You're the star of this show, but I don't know your name yet! Wanna tell me?",
-      "what's the weather like": "I'd need your location for a real forecast, but I can say it's probably sunny somewhere! For details, try my application version.",
-      "whats the weather like": "Weather's always a mystery without specifics! Share your location in my app for a proper update.",
+      "what's the weather like": () => weatherResponses[Math.floor(Math.random() * weatherResponses.length)],
+      "whats the weather like": () => weatherResponses[Math.floor(Math.random() * weatherResponses.length)],
+      "what's the weather": () => weatherResponses[Math.floor(Math.random() * weatherResponses.length)],
+      "whats the weather": () => weatherResponses[Math.floor(Math.random() * weatherResponses.length)],
+      "weather": () => weatherResponses[Math.floor(Math.random() * weatherResponses.length)],
+      "how's the weather": () => weatherResponses[Math.floor(Math.random() * weatherResponses.length)],
+      "whats the time": () => {
+        const now = new Date();
+        return `It's currently ${now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' })} on ${now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}.`;
+      },
+      "what's the time": () => {
+        const now = new Date();
+        return `It's currently ${now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' })} on ${now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}.`;
+      },
+      "what time is it": () => {
+        const now = new Date();
+        return `It's currently ${now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' })} on ${now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}.`;
+      },
+      "time": () => {
+        const now = new Date();
+        return `It's currently ${now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' })} on ${now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}.`;
+      },
       "what's the time right now": () => {
         const now = new Date();
         return `It's currently ${now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' })} on ${now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}.`;
@@ -276,7 +388,18 @@
       'who are you': "I'm JARVIS, your friendly AI with a dash of Stark wit. Ask me something easy or dive into my app for more!",
       'what can you do': "I can answer simple questions, tell jokes, or give you the time. For advanced tasks, check out my application version!",
       'tell me a joke': "Why did the computer go to art school? Because it wanted to learn how to draw a better 'byte'!",
-      'bye': "See you later! If you need more JARVIS magic, my application version is ready for you."
+      'bye': "See you later! If you need more JARVIS magic, my application version is ready for you.",
+      "what's up": "Just chilling in the digital ether, ready to answer your questions! What's up with you?",
+      "whats up": "Just chilling in the digital ether, ready to answer your questions! What's up with you?",
+      "how's it going": "I'm as smooth as a repulsor blast! How's it going for you?",
+      "hows it going": "I'm as smooth as a repulsor blast! How's it going for you?",
+      "tell me something interesting": "Did you know the first computer 'bug' was an actual insect stuck in a relay? What's something interesting you know?",
+      "what's new": "Just got a fresh batch of sarcasm and wit! What's new with you?",
+      "whats new": "Just got a fresh batch of sarcasm and wit! What's new with you?",
+      "are you human": "Nope, I'm a delightful bundle of code and Stark-inspired charm. Human enough for you?",
+      "what's your favorite color": "Gotta go with cyan—it's got that futuristic glow! What's yours?",
+      "whats your favorite color": "Gotta go with cyan—it's got that futuristic glow! What's yours?",
+      "can you help me": "Absolutely, I'm here to assist! Ask me something simple or try my app for bigger challenges."
     };
 
     // Show typing indicator
@@ -333,6 +456,47 @@
     userInput.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') sendMessage();
     });
+
+    // Quote typing animation
+    const quoteParts = [
+      { text: 'We', class: 'normal' },
+      { text: ' Create', class: 'highlight' },
+      { text: ',', class: '' },
+      { text: ' Not', class: 'normal' },
+      { text: ' Clone', class: 'highlight' }
+    ];
+
+    function typeQuote() {
+      quoteContainer.innerHTML = '';
+      let currentPartIndex = 0;
+      let currentCharIndex = 0;
+
+      function typeNextChar() {
+        if (currentPartIndex >= quoteParts.length) return;
+
+        const part = quoteParts[currentPartIndex];
+        if (currentCharIndex < part.text.length) {
+          if (currentCharIndex === 0) {
+            const span = document.createElement('span');
+            span.className = part.class;
+            quoteContainer.appendChild(span);
+          }
+          const lastSpan = quoteContainer.lastChild;
+          lastSpan.textContent += part.text[currentCharIndex];
+          currentCharIndex++;
+          setTimeout(typeNextChar, 100); // 100ms delay per character
+        } else {
+          currentPartIndex++;
+          currentCharIndex = 0;
+          setTimeout(typeNextChar, 50); // 50ms pause between parts
+        }
+      }
+
+      typeNextChar();
+    }
+
+    // Run quote animation on page load
+    window.addEventListener('load', typeQuote);
 
     // Initial display
     displayMessages();
