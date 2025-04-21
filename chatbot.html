@@ -153,7 +153,7 @@
     }
 
     .chat-input button:hover {
-      background: rgba(0, 255, 255, 0.5);
+      background: rgbastill 0, 255, 255, 0.5);
     }
   </style>
 </head>
@@ -202,6 +202,25 @@
       chatBox.scrollTop = chatBox.scrollHeight;
     }
 
+    // Introductory message
+    if (messages.length === 0) {
+      messages.push({
+        role: 'assistant',
+        content: "Hey, I'm JARVIS! I can answer simple questions, provide witty banter, and maybe even throw in a Stark-inspired quip or two. Ask me something basic like 'How are you?' or try my full application version for more advanced queries!"
+      });
+      localStorage.setItem('chatHistory', JSON.stringify(messages));
+    }
+
+    // Predefined responses for simple queries
+    const simpleResponses = {
+      'how are you': "I'm doing great, thanks for asking! Just floating in the digital ether, ready to assist. Want more? Use my application version!",
+      'hi': "Hello there! JARVIS at your service. Got a simple question or want to explore more with my app?",
+      'hello': "Hey, it's me, JARVIS! I can chat about basic stuff here. For the full experience, check out my application version!",
+      'what can you do': "I can answer simple queries, crack a joke, or give you the time. For advanced tasks, use my application version!",
+      'who are you': "I'm JARVIS, your friendly AI assistant inspired by a certain genius billionaire. Ask me something easy, or try my app for more!",
+      'bye': "Catch you later! If you need more JARVIS, my application version is waiting."
+    };
+
     // Get real-time information
     function getRealtimeInformation() {
       const now = new Date();
@@ -218,9 +237,9 @@
              `Time ${hour} hours: ${minute} minutes: ${second} seconds.\n`;
     }
 
-    // Send message to backend
+    // Send message
     async function sendMessage() {
-      const query = userInput.value.trim();
+      const query = userInput.value.trim().toLowerCase();
       if (!query) return;
 
       // Add user message to history
@@ -228,24 +247,21 @@
       displayMessages();
       userInput.value = '';
 
-      try {
-        const response = await fetch('/api/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ query, realtimeInfo: getRealtimeInformation() })
-        });
-
-        if (!response.ok) throw new Error('Failed to fetch response');
-
-        const data = await response.json();
-        messages.push({ role: 'assistant', content: data.answer });
+      // Check if query matches simple responses
+      if (simpleResponses[query]) {
+        messages.push({ role: 'assistant', content: simpleResponses[query] });
         localStorage.setItem('chatHistory', JSON.stringify(messages));
         displayMessages();
-      } catch (error) {
-        console.error('Error:', error);
-        messages.push({ role: 'assistant', content: 'Sorry, something went wrong. Please try again.' });
-        displayMessages();
+        return;
       }
+
+      // For other queries, suggest the application version
+      messages.push({
+        role: 'assistant',
+        content: "That sounds interesting! For more advanced queries, please use my application version."
+      });
+      localStorage.setItem('chatHistory', JSON.stringify(messages));
+      displayMessages();
     }
 
     // Handle Enter key
