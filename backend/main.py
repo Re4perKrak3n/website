@@ -1,12 +1,22 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from groq import Groq
-import datetime
+import os
 
 app = FastAPI()
 
-# Initialize Groq client with hardcoded key
-client = Groq(api_key="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")
+# Enable CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://your-netlify-site.netlify.app"],  # Replace with your Netlify URL
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Initialize Groq client with environment variable
+client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 # Environment variables
 USERNAME = "User"
