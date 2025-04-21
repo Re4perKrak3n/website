@@ -9,7 +9,7 @@ app = FastAPI()
 # Enable CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://your-netlify-site.netlify.app"],  # Replace with your Netlify URL
+    allow_origins=["https://jarvissai.netlify.app"],  # Replace with your Netlify URL
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
